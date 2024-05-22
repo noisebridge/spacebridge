@@ -1,0 +1,29 @@
+###############################################################################
+# Bazel now uses Bzlmod by default to manage external dependencies.
+# Please consider migrating your external dependencies from WORKSPACE to MODULE.bazel.
+#
+# For more details, please check https://github.com/bazelbuild/bazel/issues/18958
+###############################################################################
+module(
+	name = "spacebridge",
+	repo_name = "net_noisebridge_spacebridge",
+	version = "1.0")
+
+bazel_dep(name = "protobuf", version = "26.0")
+
+bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "rules_proto", version = "6.0.0")
+
+
+bazel_dep(name = "rules_python", version = "0.32.2")
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pip",
+    python_version = "3.12",
+    requirements_lock = "//:requirements_lock.txt",
+)
+use_repo(pip, "pip")
+
+
+bazel_dep(name = "rules_pyvenv", version = "1.0")

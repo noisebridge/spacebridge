@@ -92,7 +92,7 @@ def generate_telescope_mask(cap):
 
 		# Draw a circle to indicate inner perimeter for the tube mask.
 		calib_frame = frame.copy()
-		cv2.circle(calib_frame, (camera_params.x,camera_params.y), camera_params.radius, (0,255,0), 5)
+		cv2.circle(calib_frame, (cam_params.x,cam_params.y), cam_params.radius, (0,255,0), 5)
 		cv2.imshow("calib_frame", calib_frame)
 
 		(should_continue, cam_params) = wait_for_and_handle_key_inputs(cam_params)
@@ -100,9 +100,9 @@ def generate_telescope_mask(cap):
 			break
 
 	# Build Mask
-	print('camera_params:', cam_parms)
+	print('camera_params:', cam_params)
 	mask = np.zeros_like(frame[:,:,0])
-	mask = cv2.circle(mask, (camera_params.x,camera_params.y), camera_params.radius, 255, -1)
+	mask = cv2.circle(mask, (cam_params.x,cam_params.y), cam_params.radius, 255, -1)
 	cv2.imshow("mask", mask)
 	cv2.waitKey(0)
 		

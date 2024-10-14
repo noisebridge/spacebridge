@@ -1,5 +1,9 @@
 import serial, time
-serial_port_name = '/dev/tty.usbserial-B0033MRP'
+#serial_port_name = '/dev/tty.usbserial-B0033MRP'
+#serial_port_name = '/dev/serial'
+#serial_port_name = '/dev/serial0'
+serial_port_name = '/dev/ttyUSB0'
+
 
 
 def slew_direction(direction :bytes) -> None:

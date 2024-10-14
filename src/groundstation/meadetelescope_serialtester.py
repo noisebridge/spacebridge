@@ -1,6 +1,8 @@
 import serial, time
 
-serial_port_name = '/dev/cu.usbserial-B0033MRP'
+#serial_port_name = '/dev/cu.usbserial-B0033MRP'
+serial_port_name = '/dev/ttyUSB0'
+
 try:
     with serial.Serial(serial_port_name, 9600, timeout=2) as ser:
         ser.write(b':Ms#')  # Send a command (adjust as necessary)

@@ -81,6 +81,12 @@ def slew_right():
 	meade_rotator.queue_command(0, MeadeCommand.SLEW_RIGHT)
 	return "Slewing right!"
 
+@flask_app.route("/slew_stop")
+def slew_stop():
+	global meade_rotator
+	meade_rotator.queue_command(0, MeadeCommand.SLEW_STOP)
+	return "Stop slewing!"
+
 def main(argv):
 	global meade_rotator
 	if FLAGS.debug:

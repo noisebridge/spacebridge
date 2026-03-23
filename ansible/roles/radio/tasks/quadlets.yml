@@ -1,0 +1,53 @@
+---
+- name: Create meshtastic-serial network
+  containers.podman.podman_network:
+    name: meshtastic-serial
+    state: quadlet
+
+- name: Create meshmonitor-data volume
+  containers.podman.podman_volume:
+    name: meshmonitor-data
+    state: quadlet
+
+- name: Create meshtastic-web quadlet
+  containers.podman.podman_container:
+    name: meshtastic-web-client
+    image: "ghcr.io/meshtastic/web:{{ meshtastic_web_version }}"
+    state: quadlet
+    restart_policy: on-failure
+    publish:
+      - "127.0.0.1:{{ meshtastic_web_port }}:8080"
+
+- name: Create node-serial-bridge quadlet
+  containers.podman.podman_container:
+    name: meshtastic-serial-bridge
+    image: "ghcr.io/yeraze/meshtastic-serial-bridge:{{ meshtastic_serial_bridge_version }}"
+    state: quadlet
+    restart_policy: on-failure
+    device:
+      - /dev/ttyACM0:/dev/ttyACM0
+    env:
+      SERIAL_DEVICE: /dev/ttyACM0
+      BAUD_RATE: 115200
+      TCP_PORT: 4403
+    network:
+      - meshtastic-serial
+
+- name: Create node-monitor quadlet
+  containers.podman.podman_container:
+    name: meshmonitor
+    image: "ghcr.io/yeraze/meshmonitor:{{ meshtastic_meshmonitor_version }}"
+    state: quadlet
+    restart_policy: on-failure
+    requires:
+      - meshtastic-serial-bridge
+    volume:
+      - meshmonitor-data:/data
+    env:
+      MESHTASTIC_NODE_IP: serial-bridge
+      ALLOWED_ORIGINS: https://radio.noise
+      BASE_URL: /meshtastic/monitor
+    network:
+      - meshtastic-serial
+    publish:
+      - "127.0.0.1:{{ meshtastic_meshmonitor_port }}:3001"

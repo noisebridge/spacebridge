@@ -1,0 +1,18 @@
+---
+- name: Ensure radio directory exists
+  file:
+    path: "{{ meshtastic_deployment_dir }}"
+    state: directory
+
+- name: Upload autoconnect script
+  template:
+    src: radio/autoconnect.js.j2
+    dest: "{{ meshtastic_deployment_dir }}/autoconnect.js"
+
+# There are two methods of provisioning the containers. 
+# Quadlets is the planned future method.
+- name: Provision quadlets
+  include_tasks: quadlets.yml
+
+# - name: Provision Docker Compose
+#   include_tasks: docker.yml
